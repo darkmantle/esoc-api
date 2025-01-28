@@ -2,10 +2,11 @@ package market
 
 import (
 	"encoding/json"
-	"esoclife/api"
-	"esoclife/api/http"
 	"log"
 	"sort"
+
+	api "github.com/darkmantle/esoc-api"
+	"github.com/darkmantle/esoc-api/http"
 )
 
 type Market struct {
