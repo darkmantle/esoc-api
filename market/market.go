@@ -5,7 +5,6 @@ import (
 	"log"
 	"sort"
 
-	api "github.com/darkmantle/esoc-api"
 	"github.com/darkmantle/esoc-api/http"
 )
 
@@ -21,7 +20,13 @@ type Market struct {
 	Supply   int
 }
 
-func FetchData() []Market {
+type GetMarketDataParams struct {
+	ProductType string
+	Quality     int
+	Limit       int
+}
+
+func FetchMarketData() []Market {
 	var jsonStr = http.GetJsonStringFromUrl("https://www.esoclife.com/en/api/market/1")
 	var results []Market
 
@@ -45,8 +50,8 @@ func FetchData() []Market {
 	return results
 }
 
-func GetMarketData(params api.GetDataParams) []Market {
-	var allResults []Market = FetchData()
+func GetMarketData(params GetMarketDataParams) []Market {
+	var allResults []Market = FetchMarketData()
 
 	if params.Limit == 0 {
 		params.Limit = 10
