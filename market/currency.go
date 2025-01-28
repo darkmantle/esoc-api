@@ -3,6 +3,7 @@ package market
 import (
 	"encoding/json"
 	"log"
+	"sort"
 	"strings"
 
 	"github.com/darkmantle/esoc-api/http"
@@ -21,6 +22,7 @@ type Currency struct {
 type GetCurrencyDataParams struct {
 	Currency string
 	Type     string
+	Limit    int64
 }
 
 func FetchCurrencyData() []Currency {
@@ -51,6 +53,10 @@ func FetchCurrencyData() []Currency {
 func GetCurrencyData(params GetCurrencyDataParams) []Currency {
 	var allResults []Currency = FetchCurrencyData()
 
+	if params.Limit == 0 {
+		params.Limit = 10
+	}
+
 	// Filter on currency
 	n := 0
 	for _, val := range allResults {
@@ -65,6 +71,15 @@ func GetCurrencyData(params GetCurrencyDataParams) []Currency {
 		}
 	}
 	allResults = allResults[:n]
+
+	// Sort and limit
+	// Sort by lowest price first
+	sort.Slice(allResults, func(a, b int) bool {
+		return allResults[a].Rate < allResults[b].Rate
+	})
+
+	// Return a limit
+	allResults = allResults[:params.Limit]
 
 	return allResults
 }
