@@ -51,29 +51,31 @@ func FetchMarketData() []Market {
 }
 
 func GetMarketData(params GetMarketDataParams) []Market {
-	var allResults []Market = FetchMarketData()
+	var filtered []Market
 
 	if params.Limit == 0 {
 		params.Limit = 10
 	}
 
 	// Filter on productType and quality
-	n := 0
-	for _, val := range allResults {
+	for _, val := range FetchMarketData() {
 		if val.Product == params.ProductType && (val.Quality == params.Quality || params.Quality == 0) {
-			allResults[n] = val
-			n++
+			filtered = append(filtered, val)
 		}
 	}
-	allResults = allResults[:n]
 
 	// Sort by lowest price first
-	sort.Slice(allResults, func(a, b int) bool {
-		return allResults[a].Price < allResults[b].Price
+	sort.Slice(filtered, func(a, b int) bool {
+		return filtered[a].Price < filtered[b].Price
 	})
 
-	// Return a limit
-	allResults = allResults[:params.Limit]
+	// To avoid out of bounds error due to limit being more than length
+	if len(filtered) < params.Limit {
+		params.Limit = len(filtered)
+	}
 
-	return allResults
+	// Return a limit
+	filtered = filtered[:params.Limit]
+
+	return filtered
 }
