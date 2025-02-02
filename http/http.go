@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-func GetJsonStringFromUrl(url string) map[string]any {
+func GetJsonStringFromUrl(url string) interface{} {
 
 	spaceClient := http.Client{
 		Timeout: time.Second * 2, // Timeout after 2 seconds
@@ -33,7 +33,7 @@ func GetJsonStringFromUrl(url string) map[string]any {
 		log.Fatal(readErr)
 	}
 
-	var result map[string]any
+	var result interface{}
 
 	jsonErr := json.Unmarshal([]byte(body), &result)
 	if jsonErr != nil {

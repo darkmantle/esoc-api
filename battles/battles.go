@@ -59,7 +59,7 @@ func FetchBattleData() []Battle {
 	var results []Battle
 
 	// Loop through base JSON to convert
-	for _, outer := range jsonStr {
+	for _, outer := range jsonStr.(map[string]any) {
 		// Convert to JSON
 		var jsonEncoded, jsonErr = json.Marshal(outer)
 		if jsonErr != nil {
